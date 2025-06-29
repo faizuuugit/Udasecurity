@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.udacity.catpoint</groupId>
+  <artifactId>catpoint-parent</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+
+  <name>Catpoint Parent POM</name>
+  <description>Parent POM for Catpoint Security System</description>
+
+  <modules>
+    <module>security-service</module>
+    <module>image-service</module>
+  </modules>
+
+  <properties>
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+    <aws.sdk.version>2.31.13</aws.sdk.version>
+    <slf4j.version>1.7.36</slf4j.version>
+    <guava.version>31.1-jre</guava.version>
+    <gson.version>2.9.1</gson.version>
+    <javafx.version>17.0.2</javafx.version>
+
+    <maven.compiler.plugin.version>3.10.1</maven.compiler.plugin.version>
+    <maven.surefire.plugin.version>3.0.0-M7</maven.surefire.plugin.version>
+    <maven.jar.plugin.version>3.2.2</maven.jar.plugin.version>
+    <maven.site.plugin.version>3.12.1</maven.site.plugin.version>
+    <spotbugs.version>4.9.3.0</spotbugs.version>
+    <spotbugs.skip>false</spotbugs.skip>
+    <spotbugs.effort>Max</spotbugs.effort>
+    <spotbugs.threshold>Medium</spotbugs.threshold>
+
+
+    <argLine.surefire>--add-opens com.udacity.catpoint.security/com.udacity.catpoint.security.data=ALL-UNNAMED --add-opens com.udacity.catpoint.security/com.udacity.catpoint.security.service=ALL-UNNAMED</argLine.surefire>
+  </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>software.amazon.awssdk</groupId>
+        <artifactId>bom</artifactId>
+        <version>${aws.sdk.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>${slf4j.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.guava</groupId>
+        <artifactId>guava</artifactId>
+        <version>${guava.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.code.gson</groupId>
+        <artifactId>gson</artifactId>
+        <version>${gson.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.openjfx</groupId>
+        <artifactId>javafx-swing</artifactId>
+        <version>${javafx.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter</artifactId>
+        <version>5.13.0-M2</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.github.spotbugs</groupId>
+        <artifactId>spotbugs-annotations</artifactId>
+        <version>4.7.3</version>
+        <scope>provided</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>${maven.compiler.plugin.version}</version>
+          <configuration>
+            <compilerArgs>
+              <arg>--add-modules</arg>
+              <arg>java.desktop</arg>
+            </compilerArgs>
+          </configuration>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>${maven.surefire.plugin.version}</version>
+          <configuration>
+            <argLine>
+              ${argLine.surefire}
+              -Djava.awt.headless=true
+            </argLine>
+            <useSystemClassLoader>false</useSystemClassLoader>
+          </configuration>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>${maven.jar.plugin.version}</version>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-site-plugin</artifactId>
+          <version>${maven.site.plugin.version}</version>
+        </plugin>
+
+        <plugin>
+          <groupId>com.github.spotbugs</groupId>
+          <artifactId>spotbugs-maven-plugin</artifactId>
+          <version>${spotbugs.version}</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+      </plugin>
+
+      <plugin>
+        <groupId>com.github.spotbugs</groupId>
+        <artifactId>spotbugs-maven-plugin</artifactId>
+        <configuration>
+          <effort>${spotbugs.effort}</effort>
+          <threshold>${spotbugs.threshold}</threshold>
+          <skip>${spotbugs.skip}</skip>
+          <failOnError>true</failOnError>
+          <xmlOutput>true</xmlOutput>
+          <outputDirectory>${project.build.directory}/spotbugs-build</outputDirectory>
+        </configuration>
+        <executions>
+          <execution>
+            <id>spotbugs-analysis</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>com.github.spotbugs</groupId>
+        <artifactId>spotbugs-maven-plugin</artifactId>
+        <configuration>
+          <effort>${spotbugs.effort}</effort>
+          <threshold>${spotbugs.threshold}</threshold>
+          <xmlOutput>false</xmlOutput>
+          <htmlOutput>true</htmlOutput>
+          <outputDirectory>${project.reporting.outputDirectory}/spotbugs</outputDirectory>
+        </configuration>
+      </plugin>
+    </plugins>
+  </reporting>
+</project>
