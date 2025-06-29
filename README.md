@@ -1,4 +1,4 @@
-## This is a modular Java application developed as part of the Udacity Security Engineer Nanodegree. The project simulates a home security system, integrating image processing, sensor logic, and GUI components.
+## This is a modular Java application developed as part ofJ ava Development Nanodegree at Udacity. The project simulates a home security system, integrating image processing, sensor logic, and GUI components.
 
 ---
 
